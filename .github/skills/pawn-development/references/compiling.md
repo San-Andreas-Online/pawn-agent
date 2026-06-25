@@ -16,7 +16,7 @@ The `scripts/compile_check.sh` script provided with this skill attempts to autom
 ## Typical compile command
 
 ```bash
-./pawncc -d3 -;+ -O2 -i./includes -i./qawno/include mongamemode.pwn
+./pawncc -d3 -;+ -O2 -i./includes -i./qawno/include gamemode.pwn
 ```
 
 - `-d3`: maximum debug level (recommended in development — makes `crashdetect` much more useful to pinpoint the exact line of a crash).
