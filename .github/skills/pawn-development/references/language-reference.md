@@ -43,7 +43,7 @@ format(sMessage, sizeof(sMessage), "Bonjour %s", sName);
 - **Always** use `sizeof(buffer)` instead of a hardcoded number when calling a function that fills a buffer — resizing the buffer later without updating a hardcoded number is a classic source of memory overflow.
 - `MAX_PLAYER_NAME` is 24 (including the terminator) in standard SA-MP/open.mp — a smaller buffer truncates or corrupts adjacent memory.
 - String concatenation is not done with `+`: use `format()`, or `strcat()`.
-- A 2D string array must declare both dimensions: `new szList[10][64];`.
+- A 2D string array must declare both dimensions: `new sList[10][64];`.
 
 ## Enumerations
 

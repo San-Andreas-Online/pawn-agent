@@ -4,7 +4,7 @@ This file lists the most frequent causes of bugs in Pawn/open.mp, to be checked 
 
 ## Buffer Overflows and Array Sizes
 
-- **String buffer too small**: `new szName[16];` then `GetPlayerName(playerid, szName, 24);` → silent memory overflow that corrupts adjacent variables. Always size name buffers to at least `MAX_PLAYER_NAME` and use `sizeof()` at the call site rather than a hardcoded number.
+- **String buffer too small**: `new sName[16];` then `GetPlayerName(playerid, sName, 24);` → silent memory overflow that corrupts adjacent variables. Always size name buffers to at least `MAX_PLAYER_NAME` and use `sizeof()` at the call site rather than a hardcoded number.
 - **Out-of-bounds index on `playerid`/`vehicleid`**: an array sized `new iData[MAX_PLAYERS]` indexed with a vehicle ID (or vice versa) causes silent corruption rather than an immediate crash — verify consistency between the sizing constant (`MAX_PLAYERS`, `MAX_VEHICLES`) and the ID being used.
 - **`for` loop with wrong bound**: `for (new i = 0; i <= MAX_PLAYERS; i++)` (using `<=` instead of `<`) reads/writes an out-of-bounds index.
 

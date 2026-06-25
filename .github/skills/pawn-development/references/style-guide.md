@@ -10,7 +10,8 @@ Pawn style varies a lot from one project to another (a legacy of different SA-MP
 | --- | --- | --- |
 | Integer variable | `i` prefix | `iScore`, `iPlayerCount` |
 | Float variable | `f` prefix | `fHealth` |
-| String | `sz` prefix (string zero-terminated) | `szMessage[128]` |
+| String | `s` prefix (string, can be explicitly marked as zero-terminated with `s` if needed) | `sMessage[128]` |
+| Array | no prefix, except if all contents share the same type | `playerScores[MAX_PLAYERS]` |
 | Boolean | `b` prefix | `bIsAdmin` |
 | Enum constant | shared UPPERCASE prefix | `E_PD_SCORE`, `E_PD_LEVEL` |
 | `#define` constant | UPPERCASE_WITH_UNDERSCORES | `MAX_HOUSES` |
