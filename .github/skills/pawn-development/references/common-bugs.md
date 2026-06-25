@@ -26,7 +26,7 @@ This file lists the most frequent causes of bugs in Pawn/open.mp, to be checked 
 
 ## Callbacks and Hooks
 
-- **Overwritten hook** (#overwritten-hooks): if two scripts/files independently define `public OnPlayerConnect` (or another standard callback) **without** going through `y_hooks`/`hook`, and both files are compiled together in a single `.pwn` via `#include`, it is a symbol redefinition error. If each is a separately compiled module (filterscript), both execute but independently — verify the actual project architecture before assuming either case.
+- **Overwritten hook** (#overwritten-hooks): if two scripts/files independently define `public OnPlayerConnect` (or another standard callback) **without** going through `y_hooks`/`hook` or ALS hooking method, and both files are compiled together in a single `.pwn` via `#include`, it is a symbol redefinition error. If each is a separately compiled module (filterscript), both execute but independently — verify the actual project architecture before assuming either case.
 - **Wrong return value** in a callback that acts as a "filter" (e.g. `OnPlayerCommandText` returns `0` for "unhandled, pass to next", `1` for "handled, stop") — always returning `1` breaks other commands/scripts that depend on chaining.
 - **Forgetting `KillTimer`**: a repeating timer (`SetTimer(..., true)`) tied to an entity that can disappear (player, vehicle) must be cancelled in the corresponding disconnect/destroy callback, otherwise the timer keeps firing on a recycled ID.
 

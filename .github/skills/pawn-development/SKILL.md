@@ -25,7 +25,7 @@ If the user's project deviates from these assumptions (pure SA-MP without open.m
 ## Workflow by Task Type
 
 ### Adding a Feature
-1. Locate the relevant callback(s) or function(s) (`OnPlayerCommandText`, `OnDialogResponse`, `OnPlayerConnect`, etc.). If multiple scripts hook the same callback (often via `y_hooks` or `#if defined`), verify that an existing hook is not being overwritten — see `references/common-bugs.md#overwritten-hooks`.
+1. Locate the relevant callback(s) or function(s) (`OnPlayerCommandText`, `OnDialogResponse`, `OnPlayerConnect`, etc.). If multiple scripts hook the same callback (often via `y_hooks` or `#if defined` (ALS method)), verify that an existing hook is not being overwritten — see `references/common-bugs.md#overwritten-hooks`.
 2. Declare necessary variables respecting scope (global vs file-level `static` vs local) and realistic array sizes for `MAX_PLAYERS`.
 3. Write the logic following `references/language-reference.md` for correct syntax (tags, enumerations, strings).
 4. If the feature requires a new dialog, timer, or command, follow the patterns in `references/openmp-api.md`.
