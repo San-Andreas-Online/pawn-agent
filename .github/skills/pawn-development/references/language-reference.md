@@ -35,9 +35,9 @@ new const MAX_X = 100;      // constant (equivalent to #define in many cases)
 Strings are arrays of `cell` (often treated as ASCII characters), not a native type:
 
 ```pawn
-new szName[MAX_PLAYER_NAME];      // string buffer, always size explicitly
-GetPlayerName(playerid, szName, sizeof(szName));   // use sizeof() for length, not a hardcoded constant
-format(szMessage, sizeof(szMessage), "Bonjour %s", szName);
+new sName[MAX_PLAYER_NAME];      // string buffer, always size explicitly
+GetPlayerName(playerid, sName, sizeof(sName));   // use sizeof() for length, not a hardcoded constant
+format(sMessage, sizeof(sMessage), "Bonjour %s", sName);
 ```
 
 - **Always** use `sizeof(buffer)` instead of a hardcoded number when calling a function that fills a buffer — resizing the buffer later without updating a hardcoded number is a classic source of memory overflow.
