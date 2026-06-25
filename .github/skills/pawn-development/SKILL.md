@@ -60,6 +60,8 @@ Use `scripts/compile_check.sh` to locate `pawncc` in the project and compile a f
 bash /mnt/skills/.../pawn-development/scripts/compile_check.sh path/to/file.pwn
 ```
 
+If you can find a compiling configuration in `tasks.json` or such, use that  or its information instead. If the user has a custom build script, ask them to run it and provide the output.
+
 If `pawncc` cannot be found in the environment (no binary available on this system), clearly state this to the user instead of pretending to have verified compilation — instead, propose a targeted manual review of the points in `references/common-bugs.md`.
 
 See `references/compiling.md` for interpreting common `pawncc` errors/warnings.
