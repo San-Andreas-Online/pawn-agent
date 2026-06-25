@@ -2,7 +2,7 @@
 
 open.mp is a modern, open-source reimplementation of the SA-MP server, **backward-compatible** with existing SA-MP gamemodes/filterscripts while adding new natives, more precise callbacks, and a `config.json` configuration file (instead of/in addition to `server.cfg`).
 
-## Table des matières
+## Table of Contents
 
 - Main lifecycle callbacks
 - Player iteration: `foreach`
@@ -95,11 +95,11 @@ if (sscanf(params, "if", targetid, health))
 ## Dialogs
 
 ```pawn
-ShowPlayerDialog(playerid, DIALOG_MON_MENU, DIALOG_STYLE_LIST, "Titre", "Option 1\nOption 2", "Choisir", "Annuler");
+ShowPlayerDialog(playerid, DIALOG_MY_MENU, DIALOG_STYLE_LIST, "Titre", "Option 1\nOption 2", "Choisir", "Annuler");
 
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
-    if (dialogid == DIALOG_MON_MENU)
+    if (dialogid == DIALOG_MY_MENU)
     {
         if (!response) return 1; // "Cancel" button
         switch (listitem)
@@ -112,14 +112,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 }
 ```
 
-- Always define dialog IDs as named constants (`#define DIALOG_MON_MENU 100`) instead of hardcoded numbers, to avoid ID collisions across scripts.
+- Always define dialog IDs as named constants (`#define DIALOG_MY_MENU 100`) instead of hardcoded numbers, to avoid ID collisions across scripts.
 
 ## Timers
 
 ```pawn
-new monTimer = SetTimerEx("MaFonction", 1000, false, "i", playerid); // false = one-time execution
+new monTimer = SetTimerEx("MyFunction", 1000, false, "i", playerid); // false = one-time execution
 // ...
-public MaFonction(playerid)
+public MyFunction(playerid)
 {
     if (!IsPlayerConnected(playerid)) return 1; // player may have disconnected before execution
     // ...
@@ -135,7 +135,7 @@ public MaFonction(playerid)
 Used to manage many objects/zones/checkpoints dynamically without exceeding native limits:
 
 ```pawn
-new STREAMER_TAG_OBJECT:monObjet = CreateDynamicObject(modelid, x, y, z, rx, ry, rz, worldid, interiorid, playerid, streamdistance);
+new STREAMER_TAG_OBJECT:myObject = CreateDynamicObject(modelid, x, y, z, rx, ry, rz, worldid, interiorid, playerid, streamdistance);
 ```
 
 - Always type the variable with the matching `STREAMER_TAG_*` tag (e.g. `STREAMER_TAG_OBJECT:`, `STREAMER_TAG_AREA:`) rather than a raw integer — otherwise generic `Streamer_*` functions may misinterpret the type.
