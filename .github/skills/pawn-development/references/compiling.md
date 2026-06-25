@@ -7,9 +7,11 @@ In a typical open.mp project, `pawncc` is usually located in one of these paths 
 ```text
 qawno/pawncc          (open.mp, Linux)
 qawno/pawncc.exe      (open.mp, Windows)
-pawno/pawncc          (SA-MP legacy)
-pawno/pawncc.exe
+pawno/pawncc          (SA-MP legacy, Linux)
+pawno/pawncc.exe      (SA-MP legacy, Windows)
 ```
+
+You can still check the project structure to find it if the above paths do not exist.
 
 The `scripts/compile_check.sh` script provided with this skill attempts to automatically locate the binary in the current project.
 
