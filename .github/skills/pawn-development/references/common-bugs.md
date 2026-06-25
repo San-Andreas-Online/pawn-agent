@@ -10,7 +10,8 @@ This file lists the most frequent causes of bugs in Pawn/open.mp, to be checked 
 
 ## Uninitialized Variables
 
-- An unassigned `new` variable defaults to `0`, but a **per-player enumeration array entry** reused after disconnection (`PlayerData[playerid][...]`) may contain the previous player's values if not reset in `OnPlayerConnect` — a classic trap for fields like money, score, or progression state.
+- An unassigned `new` variable defaults to `0`, make sure this is wanted behaviour, or initialize explicitly with a value that will not be confused with a valid state (e.g., `INVALID_PLAYER_ID`).
+- A **per-player enumeration array entry** reused after disconnection (`playerData[playerid][...]`) may contain the previous player's values if not reset in `OnPlayerConnect` — a classic trap for fields like money, score, or progression state.
 - Systematically verify that `OnPlayerConnect` resets (or reloads from the database) all relevant data rather than assuming a clean default state.
 
 ## Operator Confusion
