@@ -45,7 +45,7 @@ if (GetPlayerScore(playerid) > VIP_SCORE_THRESHOLD) { ... }
 
 ### Replacing Manual Loops with `foreach`
 
-If the YSI library is already present in the project, replacing `for (new i = 0; i < MAX_PLAYERS; i++) { if (!IsPlayerConnected(i)) continue; ... }` with `foreach (new i : Player) { ... }` reduces boundary-related mistakes and clarifies intent. Do not introduce a YSI dependency in a project that does not already use it just for this style gain.
+When a loop is present, use macros to use foreach if available (`#if defined foreach`). Replacing `for (new i = 0; i < MAX_PLAYERS; i++) { if (!IsPlayerConnected(i)) continue; ... }` with `foreach (new i : Player) { ... }` reduces boundary-related mistakes and clarifies intent. Do not introduce a foreach dependency in a project that does not already use it just for this style gain.
 
 ### Consolidating Enums by Entity
 
