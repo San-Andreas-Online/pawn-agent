@@ -17,7 +17,7 @@ If you like this project, consider supporting us!
 
 ## Contents
 
-- [.github/copilot-instructions.md](.github/copilot-instructions.md) — agent behavior and workflow
+- [.github/copilot-instructions.md](.github/copilot-instructions.md) — Instructions for the coding assistant to follow (repository-specific as opposed to skills that are shared across repositories)
 - [.github/skills/pawn-development/SKILL.md](.github/skills/pawn-development/SKILL.md) — skill manifest and rules
 - [.github/skills/pawn-development/references/](.github/skills/pawn-development/references/) — language, API, style, and common-bugs guides
 - [.github/skills/pawn-development/scripts/compile_check.sh](.github/skills/pawn-development/scripts/compile_check.sh) — helper to validate .pwn files with `pawncc`
