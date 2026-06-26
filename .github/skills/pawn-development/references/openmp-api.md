@@ -105,13 +105,13 @@ if (sscanf(params, "if", targetid, health))
 }
 ```
 
-- The `sscanf` format (`d`=integer, `f`=float, `s`=string, `u`=player by name/id...) must exactly match the number and order of variables passed, or undefined silent behavior may occur.
+- The `sscanf` format (`d`=integer, `f`=float, `s`=string, `r`=player by name/id, `q`=bot/npc by name/id...) must exactly match the number and order of variables passed, or undefined silent behavior may occur.
 - `sscanf` returns a **non-zero** value when parsing fails — always check this return value before using variables.
 
 ## Dialogs
 
 ```pawn
-ShowPlayerDialog(playerid, DIALOG_MY_MENU, DIALOG_STYLE_LIST, "Titre", "Option 1\nOption 2", "Choisir", "Annuler");
+ShowPlayerDialog(playerid, DIALOG_MY_MENU, DIALOG_STYLE_LIST, "Title", "Option 1\nOption 2", "Choose", "Cancel");
 
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
