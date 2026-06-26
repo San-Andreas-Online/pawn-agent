@@ -35,15 +35,17 @@ Before making any changes:
    - See `references/style-guide.md` for Pawn best practices where the project lacks its own.
 
 3. **Identify dependencies** used in the code (y_hooks, sscanf, streamer, MySQL, etc.).
-   - Consult `references/openmp-api.md` for their patterns and idioms before editing.
+   - Consult `references/openmp-api.md` for open.mp/SA-MP specifics: callbacks, common natives, idioms (foreach, y_hooks, sscanf, dialogs, timers, streamer), SA-MP vs open.mp differences.
    - Never refactor without understanding how a dependency is used.
 
 ## Workflow by Task Type
 
+If missing information, use open.mp official documentation (https://open.mp/docs).
+
 ### Adding a Feature
 1. Locate the relevant callback(s) or function(s) (`OnPlayerCommandText`, `OnDialogResponse`, `OnPlayerConnect`, etc.). If multiple scripts hook the same callback (often via `y_hooks` or `#if defined` (ALS method)), verify that an existing hook is not being overwritten — see `references/common-bugs.md#overwritten-hooks`.
 2. Declare necessary variables respecting scope (global vs file-level `static` vs local) and realistic array sizes.
-3. Write the logic following `references/language-reference.md` for correct syntax (tags, enumerations, strings).
+3. Write the logic following `references/language-reference.md` for Pawn syntax (tags, enumerations, arrays, strings, operators, control flow, functions).
 4. If the feature requires a new dialog, timer, or command, follow the patterns in `references/openmp-api.md`.
 5. Compile to verify (see the Compilation section below) before considering the task complete.
 
@@ -85,24 +87,10 @@ After any modification, **always attempt to compile**. Pawn has syntactic pitfal
    - Success (exit code 0, no errors): Note this in the report.
    - Warnings: Review them — many are actionable (e.g., tag mismatches, unused variables).
    - Errors: Fix the issue before proceeding.
-   - See `references/compiling.md` for details on common error messages.
+   - See `references/compiling.md` for details on common error/warning messages, debug levels, flags.
 
 3. **Report results clearly:**
    - State what changed and why.
    - Report compilation outcome (success/failure/unavailable).
    - List any issues found in manual review.
    - State any remaining risks or follow-ups.
-
-## Reference Materials
-
-**If available in the project,** consult these files from `.github/skills/pawn-development/references/`:
-
-- **`language-reference.md`** — Pawn syntax (tags, enumerations, arrays, strings, operators, control flow, functions). Use for syntax doubts.
-- **`openmp-api.md`** — open.mp/SA-MP specifics: callbacks, common natives, idioms (foreach, y_hooks, sscanf, dialogs, timers, streamer), SA-MP vs open.mp differences.
-- **`common-bugs.md`** — Catalog of the most frequent Pawn bugs and how to identify/fix them (array overflows, buffer sizing, uninitialized variables, tag mismatches, callback return values, etc.).
-- **`style-guide.md`** — Style conventions and refactoring patterns for readable, maintainable Pawn code.
-- **`compiling.md`** — Using `pawncc`, reading error/warning messages, debug levels, flags.
-
-**If these files are not available in the project,** you can still apply the knowledge from this skill:
-- Use open.mp official documentation and SA-MP wiki for API reference.
-- The workflows and common-bugs guidance above are language-agnostic and apply to any Pawn project.
