@@ -1,32 +1,48 @@
 ---
 name: pawn-development
-description: "Develop, debug, refactor, and extend Pawn scripts for open.mp game servers (retrocompatible with SA-MP/SA:MP). Use this skill whenever the user mentions Pawn, .pwn files, .inc files, open.mp, omp, SA-MP, gamemodes, filterscripts, pawncc, or asks to add a feature, fix a bug, refactor, or write new code in a Pawn codebase. Also trigger on indirect signals even if 'Pawn' isn't said explicitly, such as callbacks like OnPlayerConnect/OnGameModeInit, native function calls, dialogs, timers, sscanf, y_hooks, streamer plugin, foreach, or references to compiling .amx files -- these are strong open.mp/Pawn signals. Make sure to consult this skill before writing or editing any .pwn/.inc/.p file."
+description: "Develop, debug, refactor, and extend Pawn scripts for open.mp/SA-MP game servers. Triggered by mentions of Pawn, .pwn files, .inc files, open.mp, omp, SA-MP, gamemodes, filterscripts, pawncc, or requests to add features, fix bugs, refactor, or write Pawn code. Also covers indirect signals: callbacks (OnPlayerConnect, OnGameModeInit), native calls, dialogs, timers, sscanf, y_hooks, streamer, foreach, or .amx compilation. Consult this skill before editing any .pwn/.inc/.p files."
 ---
 
-# Pawn Development (open.mp / SA-MP)
+# Pawn Development Skill — open.mp / SA-MP
 
-## Project Context
+**Scope:** Reusable knowledge base for Pawn development across any project.
 
-This skill targets Pawn development for **open.mp** (the modern, open-source successor to SA-MP), which remains **backward compatible** with the classic SA-MP API (`a_samp.inc`). Unless the user specifies otherwise, assume that:
+## Assumptions & Context
 
-- `open.mp` natives (prefixed or not, e.g. `GetPlayerVersion`, `Player_GetVersionName`) are available in addition to legacy SA-MP natives.
-- Common includes: `<a_samp>`, `<a_mysql>` or `<a_mysql>`/`MySQL` plugin (R41-4 or later), `<streamer>`, `<sscanf2>` or `<sscanf>`, `<YSI_*>` (y_hooks, y_iterate/foreach, y_timers), `<a_npc>`.
-- Source files have the `.pwn` extension (gamemodes/filterscripts) or `.inc` (libraries/includes).
-- The compiler is `pawncc` (often bundled with open.mp in `qawno/` or `pawno/`), targeting an `.amx` file.
+This skill assumes **open.mp** (modern, open-source SA-MP successor) or **SA-MP** unless told otherwise. open.mp is backward compatible with SA-MP's API (`a_samp.inc`).
 
-If the user's project deviates from these assumptions (pure SA-MP without open.mp, MTA:SA, or generic non-game Pawn), adapt to what they describe and point out relevant differences rather than imposing open.mp conventions.
+**Default environment:**
+- **Natives:** open.mp natives (with/without prefix like `GetPlayerVersion`, `NetStats_GetConnectedTime`) + SA-MP legacy natives
+- **Common includes:** `<foreach>`, `<streamer>`, `<sscanf2>`/`<sscanf>`, `<YSI_*>` (y_hooks, y_iterate/foreach, y_timers), `<colandreas>`
+- **Source files:** `.pwn` (gamemodes, filterscripts) or `.inc` (libraries)
+- **Compiler:** `pawncc` (bundled in `qawno/` or `pawno/`), outputs `.amx`
 
-## Before Any Action
+**If the project differs** (pure SA-MP, MTA:SA, or generic Pawn), adapt to their specifics and flag differences.
 
-1. **Explore the actual project.** Never assume the structure: use `view`/`bash` to list files (`gamemodes/`, `filterscripts/`, `includes/` or `pawno/include`, `qawno/include`), locate `server.cfg`/`config.json` (open.mp uses `config.json`), and identify third-party plugins present.
-2. **Identify existing conventions** (indentation, function prefixes, variable naming style — see `references/style-guide.md`) and follow them rather than imposing a different style on already consistent code.
-3. **Identify dependencies**: if the code uses `y_hooks`, `sscanf`, `streamer`, MySQL, etc., consult `references/openmp-api.md` for their specific idioms before modifying code that uses them.
+## Starting a Task
+
+Before making any changes:
+
+1. **Explore the actual project structure.** Never assume — locate:
+   - Source directories: `gamemodes/`, `filterscripts/`, `includes/` (or `pawno/include`, `qawno/include`)
+   - Configuration: `server.cfg`, `config.json` (open.mp), `server.ini`
+   - Build system: `tasks.json`, custom scripts, or compiler location
+   - Dependencies: `YSI`, `sscanf`, `streamer`, MySQL, etc.
+
+2. **Identify existing conventions** (indentation style, naming patterns, layout) by scanning existing code.
+   - Consult `CONTRIBUTING.md` or equivalent documentation in the project.
+   - Follow those conventions rather than imposing a new style.
+   - See `references/style-guide.md` for Pawn best practices where the project lacks its own.
+
+3. **Identify dependencies** used in the code (y_hooks, sscanf, streamer, MySQL, etc.).
+   - Consult `references/openmp-api.md` for their patterns and idioms before editing.
+   - Never refactor without understanding how a dependency is used.
 
 ## Workflow by Task Type
 
 ### Adding a Feature
 1. Locate the relevant callback(s) or function(s) (`OnPlayerCommandText`, `OnDialogResponse`, `OnPlayerConnect`, etc.). If multiple scripts hook the same callback (often via `y_hooks` or `#if defined` (ALS method)), verify that an existing hook is not being overwritten — see `references/common-bugs.md#overwritten-hooks`.
-2. Declare necessary variables respecting scope (global vs file-level `static` vs local) and realistic array sizes for `MAX_PLAYERS`.
+2. Declare necessary variables respecting scope (global vs file-level `static` vs local) and realistic array sizes.
 3. Write the logic following `references/language-reference.md` for correct syntax (tags, enumerations, strings).
 4. If the feature requires a new dialog, timer, or command, follow the patterns in `references/openmp-api.md`.
 5. Compile to verify (see the Compilation section below) before considering the task complete.
@@ -50,28 +66,43 @@ If the user's project deviates from these assumptions (pure SA-MP without open.m
 3. Initialize all fixed-size arrays and check bounds (`MAX_PLAYERS`, string sizes — see `references/common-bugs.md`).
 4. Document public functions with a brief comment above them (parameters, return value).
 
-## Compilation and Verification
+## Compilation & Verification
 
-After a modification, **always try to compile** when possible rather than relying solely on manual review — Pawn has syntactic pitfalls (tags, operators) that a manual review easily misses.
+After any modification, **always attempt to compile**. Pawn has syntactic pitfalls (tags, operators) that a single approach easily misses. Use both compilation (when available) and manual review.
 
-Use `scripts/compile_check.sh` to locate `pawncc` in the project and compile a file:
+**Steps:**
 
-```bash
-bash /mnt/skills/.../pawn-development/scripts/compile_check.sh path/to/file.pwn
-```
+1. **Attempt compilation (if compiler is available):**
+   - Locate `pawncc` or `pawncc.exe` in the project (usually `compiler/`, `pawno/`, `qawno/`, or system `PATH`).
+   - Check for VS Code tasks in `.vscode/tasks.json` — use those if available.
+   - Or run `pawncc` directly with appropriate flags (`-i` for include paths, `-d2` for debug info, `-O1` for optimization, etc.).
+   - Example (if a compile script exists):
+     ```bash
+     bash .github/skills/pawn-development/scripts/compile_check.sh path/to/file.pwn
+     ```
 
-If you can find a compiling configuration in `tasks.json` or such, use that  or its information instead. If the user has a custom build script, ask them to run it and provide the output.
+2. **Interpret compiler output (if compilation ran):**
+   - Success (exit code 0, no errors): Note this in the report.
+   - Warnings: Review them — many are actionable (e.g., tag mismatches, unused variables).
+   - Errors: Fix the issue before proceeding.
+   - See `references/compiling.md` for details on common error messages.
 
-If `pawncc` cannot be found in the environment (no binary available on this system), clearly state this to the user instead of pretending to have verified compilation — instead, propose a targeted manual review of the points in `references/common-bugs.md`.
+3. **Report results clearly:**
+   - State what changed and why.
+   - Report compilation outcome (success/failure/unavailable).
+   - List any issues found in manual review.
+   - State any remaining risks or follow-ups.
 
-See `references/compiling.md` for interpreting common `pawncc` errors/warnings.
+## Reference Materials
 
-## Reference Files
+**If available in the project,** consult these files from `.github/skills/pawn-development/references/`:
 
-- `references/language-reference.md` — Pawn syntax (tags, enumerations, arrays, strings, operators, control flow, native/public/stock functions). Consult for any syntax doubt.
-- `references/openmp-api.md` — open.mp/SA-MP specifics: main callbacks, common natives, idioms (foreach, y_hooks, sscanf, dialogs, timers, streamer), differences between open.mp and legacy SA-MP.
-- `references/common-bugs.md` — Catalog of the most frequent Pawn bugs and how to identify/fix them.
-- `references/style-guide.md` — Style conventions and refactoring patterns for readable and maintainable Pawn code.
-- `references/compiling.md` — Using `pawncc`, reading error/warning messages, debug levels.
+- **`language-reference.md`** — Pawn syntax (tags, enumerations, arrays, strings, operators, control flow, functions). Use for syntax doubts.
+- **`openmp-api.md`** — open.mp/SA-MP specifics: callbacks, common natives, idioms (foreach, y_hooks, sscanf, dialogs, timers, streamer), SA-MP vs open.mp differences.
+- **`common-bugs.md`** — Catalog of the most frequent Pawn bugs and how to identify/fix them (array overflows, buffer sizing, uninitialized variables, tag mismatches, callback return values, etc.).
+- **`style-guide.md`** — Style conventions and refactoring patterns for readable, maintainable Pawn code.
+- **`compiling.md`** — Using `pawncc`, reading error/warning messages, debug levels, flags.
 
-Load these files on demand based on the task (no need to read all of them for a small bug fix, for example — `common-bugs.md` alone is often sufficient).
+**If these files are not available in the project,** you can still apply the knowledge from this skill:
+- Use open.mp official documentation and SA-MP wiki for API reference.
+- The workflows and common-bugs guidance above are language-agnostic and apply to any Pawn project.
