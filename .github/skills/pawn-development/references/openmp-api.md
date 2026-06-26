@@ -69,12 +69,28 @@ public OnPlayerCommandText(playerid, cmdtext[])
 
 Warning: if **multiple** scripts define `public OnPlayerCommandText`, only YSI/y_hooks behavior (which chains hooks) guarantees they all run — without that library, redefining the same `public` in the same compilation unit is an error; in separate files not compiled together, it is not an issue.
 
+WARNING: Returned values in hooks can break the chain of callbacks if not handled properly. See each library's documentation for the correct return values to use:
+
 **With `y_hooks`**:
 
 ```pawn
 hook OnPlayerCommandText(playerid, cmdtext[])
 {
     // each script can hook this callback independently; y_hooks chains them automatically
+
+    return Y_HOOKS_CONTINUE_RETURN_1; // Equivalent to 1, Also available: Y_HOOKS_CONTINUE_RETURN_0 (0), Y_HOOKS_BREAK_RETURN_1 (~1), Y_HOOKS_BREAK_RETURN_0 (~0)
+}
+```
+
+**With `pp-hooks`**:
+
+```pawn
+hook ret OnPlayerCommandText(&ret, playerid, cmdtext[]) // ret is a (optional) reference to the return value of the base callback, only use if required to modify it
+{
+    // each script can hook this callback independently; pp-hooks chains them automatically
+
+    ret = 1; // Lets the current & next hook know what value to return in the end, but does not break the chain
+    return 0; // If the hook returns a non-zero value, the following hooks and the base callback won't be executed and that value (or the one at ret if it's a ret hook) will be returned.
 }
 ```
 
