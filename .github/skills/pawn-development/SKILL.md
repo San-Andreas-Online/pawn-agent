@@ -23,20 +23,35 @@ This skill assumes **open.mp** (modern, open-source SA-MP successor) or **SA-MP*
 
 Before making any changes:
 
-1. **Explore the actual project structure.** Never assume — locate:
+1. **Read applicable project guidance.** Follow the user's requirements and any relevant project instructions when present (for example, `AGENTS.md`, `.github/copilot-instructions.md`, or `CONTRIBUTING.md`). These files are optional; do not assume a particular file or path exists. Project-specific conventions take precedence over generic recommendations.
+
+2. **Explore the actual project structure.** Never assume — locate:
    - Source directories: `gamemodes/`, `filterscripts/`, `includes/` (or `pawno/include`, `qawno/include`)
    - Configuration: `server.cfg`, `config.json` (open.mp), `server.ini`
    - Build system: `tasks.json`, custom scripts, or compiler location
    - Dependencies: `YSI`, `sscanf`, `streamer`, MySQL, etc.
 
-2. **Identify existing conventions** (indentation style, naming patterns, layout) by scanning existing code.
+3. **Identify existing conventions** (indentation style, naming patterns, layout) by scanning existing code.
    - Consult `CONTRIBUTING.md` or equivalent documentation in the project.
    - Follow those conventions rather than imposing a new style.
    - See `references/style-guide.md` for Pawn best practices where the project lacks its own.
 
-3. **Identify dependencies** used in the code (y_hooks, sscanf, streamer, MySQL, etc.).
+4. **Identify dependencies** used in the code (y_hooks, sscanf, streamer, MySQL, etc.).
    - Consult `references/openmp-api.md` for open.mp/SA-MP specifics: callbacks, common natives, idioms (foreach, y_hooks, sscanf, dialogs, timers, streamer), SA-MP vs open.mp differences.
    - Never refactor without understanding how a dependency is used.
+
+5. **Use external documentation when needed.** If the request includes a documentation URL, or an API detail is uncertain:
+   - Use the available web-fetch or search tool to check the authoritative source before relying on an uncertain signature or behavior.
+   - Prioritize raw content URLs when possible (e.g. `raw.githubusercontent.com` for GitHub files) — they are lighter and contain no HTML noise.
+   - Only extract the section relevant to the task; do not dump the entire document into context if it exceeds ~200 lines.
+   - If documentation is unavailable (network error, 404, private resource), say so explicitly, do not guess API signatures or behavior, and ask for the relevant excerpt when needed.
+
+## General Implementation Rules
+
+- Make the smallest change that satisfies the request. Do not mix unrelated refactoring into a bug fix.
+- Preserve existing behavior unless a behavior change is requested. Before refactoring callbacks, hooks, `forward`/`public` functions, or dependency integration, verify the callers and callback chaining.
+- If a consequential implementation choice cannot be determined from the request, nearby code, or project guidance, ask a focused question before making that choice. Otherwise proceed using established local patterns.
+- Check Pawn-specific risks during implementation: array and string bounds, tags and format specifiers, callback return values and hook collisions, public callback names, and timer/resource lifecycle.
 
 ## Workflow by Task Type
 
@@ -70,7 +85,7 @@ If missing information, use open.mp official documentation (https://open.mp/docs
 
 ## Compilation & Verification
 
-After any modification, **always attempt to compile**. Pawn has syntactic pitfalls (tags, operators) that a single approach easily misses. Use both compilation (when available) and manual review.
+After any Pawn source modification, attempt a focused compile when a compiler and required dependencies are available. Pawn has syntactic pitfalls (tags, operators) that source review alone can miss. Also manually review the changed code and its nearby call sites. Never report a compile or test as successful unless it was actually run.
 
 **Steps:**
 
@@ -78,10 +93,11 @@ After any modification, **always attempt to compile**. Pawn has syntactic pitfal
    - Locate `pawncc` or `pawncc.exe` in the project (usually `compiler/`, `pawno/`, `qawno/`, or system `PATH`).
    - Check for VS Code tasks in `.vscode/tasks.json` — use those if available.
    - Or run `pawncc` directly with appropriate flags (`-i` for include paths, `-d2` for debug info, `-O1` for optimization, etc.).
-   - Example (if a compile script exists):
+   - Prefer a task or helper script configured for the project, if available. For example:
      ```bash
      bash .github/skills/pawn-development/scripts/compile_check.sh path/to/file.pwn
      ```
+   - If compilation cannot be run because the compiler or dependencies are missing, record that as unavailable and continue with source review.
 
 2. **Interpret compiler output (if compilation ran):**
    - Success (exit code 0, no errors): Note this in the report.
@@ -91,6 +107,6 @@ After any modification, **always attempt to compile**. Pawn has syntactic pitfal
 
 3. **Report results clearly:**
    - State what changed and why.
-   - Report compilation outcome (success/failure/unavailable).
+   - Identify the files changed and report compilation outcome (success/failure/unavailable).
    - List any issues found in manual review.
-   - State any remaining risks or follow-ups.
+   - State remaining risks or follow-ups, and distinguish verified results from manual review.
